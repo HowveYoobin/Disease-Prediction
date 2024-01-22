@@ -86,3 +86,42 @@ do
            esac; exit;;
     esac
 done
+
+#cd ./raw_csv/                                                                  
+
+if [ $# -eq 0 ]; then
+    print_help
+    exit
+fi
+
+if [ $out_flag -eq 1 ]; then
+    mkdir -p "$out"
+    echo "Output files will be saved in $out directory."
+fi
+
+if [ $file_flag -eq 1 ]; then
+    if [ ! -e "$file_name" ]; then
+        echo "File does not exist"
+        exit
+    fi
+fi
+
+if [ $dir_flag -eq 1 ]; then
+    if [ ! -d "$dir_name" ]; then
+        echo "Directory does not exist"
+        exit
+    fi
+
+    cd "$dir_name"
+
+    for file_name in *; do
+        process_file "$file_name"
+    done
+
+    cd ".."
+
+    merge "$out"
+
+    echo "Preprocessing Completed. Check out $out"
+
+fi
